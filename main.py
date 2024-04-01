@@ -67,7 +67,7 @@ def main ():
             
             figure = Figure(screen, points, 1)
             figures.append(figure)
-
+    
     current_zoom = 1
     running = True
     while running:
@@ -81,22 +81,22 @@ def main ():
                 screen.fill(BLACK)
                 if event.key == pygame.K_LEFT:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_ratation_z_matrix(RADIOUS))
+                        fig.applay_geometric_transformation(get_ratation_z_matrix(-RADIOUS))
                 if event.key == pygame.K_RIGHT:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_ratation_z_matrix(-RADIOUS))
+                        fig.applay_geometric_transformation(get_ratation_z_matrix(RADIOUS))
                 if event.key == pygame.K_e:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_ratation_y_matrix(-RADIOUS))
+                        fig.applay_geometric_transformation(get_ratation_y_matrix(RADIOUS))
                 if event.key == pygame.K_q:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_ratation_y_matrix(RADIOUS))
+                        fig.applay_geometric_transformation(get_ratation_y_matrix(-RADIOUS))
                 if event.key == pygame.K_z:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_ratation_x_matrix(RADIOUS))
+                        fig.applay_geometric_transformation(get_ratation_x_matrix(-RADIOUS))
                 if event.key == pygame.K_c:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_ratation_x_matrix(-RADIOUS))
+                        fig.applay_geometric_transformation(get_ratation_x_matrix(RADIOUS))
                 if event.key == pygame.K_a:
                     for fig in figures:
                         fig.applay_geometric_transformation(get_translation_matrix(5, 0, 0))
