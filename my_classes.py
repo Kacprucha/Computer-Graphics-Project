@@ -1,6 +1,9 @@
 import pygame
 import numpy as np
 
+HALF_WIDTH = 400
+HALF_HIGH = 300
+
 LINE_COLOR = (255,255,255)
 D = 1000
 
@@ -55,7 +58,7 @@ class Figure:
         e_x = (((e_point.x * self.zoom) * D) / ((e_point.z * self.zoom) + D)) 
         e_y = (((e_point.y * self.zoom) * D) / ((e_point.z * self.zoom) + D)) 
         
-        pygame.draw.line(screen, LINE_COLOR, (s_x, s_y), (e_x, e_y))
+        pygame.draw.line(screen, LINE_COLOR, (s_x + HALF_WIDTH, s_y - HALF_HIGH), (e_x+ HALF_WIDTH, e_y - HALF_HIGH))
         
     def get_projected_point(self, point):
         p_x = ((point.x * D) / (point.z + D)) * self.zoom
@@ -65,11 +68,12 @@ class Figure:
 
     def draw_figure_without_walls(self):            
         for p in range(4):
-            line_d = self.connect_points(self.screen, self.points_list[p], self.points_list[(p+1) % 4])
-            
-            line_u = self.connect_points(self.screen, self.points_list[p + 4], self.points_list[((p+1) % 4) + 4])
-            
-            line_s = self.connect_points(self.screen, self.points_list[p], self.points_list[p + 4])
+            if not (self.points_list[p].z < 0 or self.points_list[(p+1) % 4].z < 0):
+                line_d = self.connect_points(self.screen, self.points_list[p], self.points_list[(p+1) % 4])
+            if not (self.points_list[p + 4].z < 0 or self.points_list[((p+1) % 4) + 4].z < 0):
+                line_u = self.connect_points(self.screen, self.points_list[p + 4], self.points_list[((p+1) % 4) + 4])
+            if not (self.points_list[p].z < 0 or self.points_list[p + 4].z < 0):
+                line_s = self.connect_points(self.screen, self.points_list[p], self.points_list[p + 4])
             
     def applay_geometric_transformation(self, matrix):
         i = 0
