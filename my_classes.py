@@ -40,16 +40,28 @@ class Point:
         self.z = int(operation[2][0])
         
 class Line:
-    def __init__(self, screen, s_point, e_point, walls_id):
+    def __init__(self, screen, s_point, e_point, walls_id, zoom=1):
         self.s_point = s_point
         self.e_point = e_point
         self.walls_id = walls_id
+        self.zoom = zoom
+        
+        if self.get_projected_y_start_point() > self.get_projected_y_end_point():
+            self.s_point, self.e_point = self.e_point, self.s_point
         
     def get_projected_point(self, point):
-        p_x = ((point.x * D) / (point.z + D)) * self.zoom
-        p_y = ((point.y * D) / (point.z + D)) * self.zoom
+        p_x = (((point.x * self.zoom) * D) / ((point.z * self.zoom) + D)) 
+        p_y = (((point.y * self.zoom) * D) / ((point.z * self.zoom) + D)) 
         
         return (p_x, p_y)
+    
+    def get_projected_y_start_point(self):
+        y = 600 - self.s_point.y
+        return (((y * self.zoom) * D) / ((self.s_point.z * self.zoom) + D))
+    
+    def get_projected_y_end_point(self):
+        y = 600 - self.e_point.y
+        return (((y * self.zoom) * D) / ((self.e_point.z * self.zoom) + D))
     
     def get_same_wall_id(self, walls_id):
         for wall_id in self.walls_id:
@@ -59,7 +71,7 @@ class Line:
         return None
     
     def if_line_horizontal(self):
-        return self.s_point.y == self.e_point.y
+        return self.get_projected_y_start_point() == self.get_projected_y_end_point()
         
 class Wall:
     def __init__(self, id, screen, line_list, color, if_in):

@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import ast
 from math import *
+from line_scan import Skaner_liniowy
 from my_classes import Point, Figure, Line, Wall, WALL_COLOR, LINE_COLOR
 
 WHITE = (255,255,255)
@@ -96,7 +97,11 @@ def main ():
             
             figure = Figure(screen, points, 1)
             figures.append(figure)
-    
+            
+        nr_fig += 1
+        
+    skaner = Skaner_liniowy(screen, walss, lines)
+    skaner.scan()
 
     current_zoom = 1
     running = True
