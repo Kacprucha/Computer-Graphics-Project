@@ -1,9 +1,10 @@
 import pygame
 import numpy as np
 
-LINE_COLOR = (255,255,255)
+# LINE_COLOR = (255,255,255)
+LINE_COLOR = (0,0,0)
 WALL_COLOR = (255,0,0)
-D = 1000
+D = 900
 
 projection_matrix = np.matrix([
     [1, 0, 0, 0],
@@ -38,6 +39,7 @@ class Point:
         self.x = int(operation[0][0])
         self.y = int(operation[1][0])
         self.z = int(operation[2][0])
+        # print(self.x, self.y, self.z)
         
 class Line:
     def __init__(self, screen, s_point, e_point, wall_id):
@@ -83,7 +85,7 @@ class Figure:
         e_x = ((e_point.x * D) / (e_point.z + D)) * self.zoom
         e_y = ((e_point.y * D) / (e_point.z + D)) * self.zoom
         
-        pygame.draw.line(screen, LINE_COLOR, (s_x, s_y), (e_x, e_y))
+        pygame.draw.line(screen, LINE_COLOR, (s_x+400, s_y-300), (e_x+400, e_y-300))
         
     def get_projected_point(self, point):
         p_x = ((point.x * D) / (point.z + D)) * self.zoom
@@ -93,11 +95,12 @@ class Figure:
 
     def draw_figure_without_walls(self):            
         for p in range(4):
-            line_d = self.connect_points(self.screen, self.points_list[p], self.points_list[(p+1) % 4])
-            
-            line_u = self.connect_points(self.screen, self.points_list[p + 4], self.points_list[((p+1) % 4) + 4])
-            
-            line_s = self.connect_points(self.screen, self.points_list[p], self.points_list[p + 4])
+            if not (self.points_list[p].z < 0 or self.points_list[(p+1) % 4].z < 0):
+                line_d = self.connect_points(self.screen, self.points_list[p], self.points_list[(p+1) % 4])
+            if not (self.points_list[p + 4].z < 0 or self.points_list[((p+1) % 4) + 4].z < 0):
+                line_u = self.connect_points(self.screen, self.points_list[p + 4], self.points_list[((p+1) % 4) + 4])
+            if not (self.points_list[p].z < 0 or self.points_list[p + 4].z < 0):
+                line_s = self.connect_points(self.screen, self.points_list[p], self.points_list[p + 4])
         
     def draw_figure_with_walls(self):            
         for p in range(4):
