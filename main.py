@@ -72,7 +72,7 @@ def main ():
     running = True
     while running:
         for fig in figures:
-            fig.draw_figure()
+            fig.draw_figure_without_walls()
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

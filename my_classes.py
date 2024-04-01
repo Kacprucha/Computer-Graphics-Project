@@ -1,8 +1,8 @@
 import pygame
 import numpy as np
-from math import *
 
 LINE_COLOR = (255,255,255)
+WALL_COLOR = (255,0,0)
 D = 1000
 
 projection_matrix = np.matrix([
@@ -39,6 +39,33 @@ class Point:
         self.y = int(operation[1][0])
         self.z = int(operation[2][0])
         
+class Line:
+    def __init__(self, screen, s_point, e_point, wall_id):
+        self.s_point = s_point
+        self.e_point = e_point
+        self.wall_id = wall_id
+        
+    def connect_points(self, screen, s_point, e_point):
+        s_r_matrix = s_point.coordinates_as_matrix()
+        projection2d = np.dot(get_projection_matrix(), s_r_matrix)
+        s_x = ((s_point.x * D) / (s_point.z + D))
+        s_y = ((s_point.y * D) / (s_point.z + D))
+        
+        e_r_matrix = e_point.coordinates_as_matrix()
+        projection2d = np.dot(get_projection_matrix(), e_r_matrix)
+        e_x = ((e_point.x * D) / (e_point.z + D))
+        e_y = ((e_point.y * D) / (e_point.z + D))
+        
+        pygame.draw.line(screen, LINE_COLOR, (s_x, s_y), (e_x, e_y))
+        
+class Wall:
+    def __init__(self, id, screen, line_list, color, if_in):
+        self.id = id
+        self.screen = screen
+        self.line_list = line_list
+        self.color = color
+        self.if_in = if_in
+        
 class Figure:
     def __init__(self, screen, points_list, zoom):
         self.screen = screen
@@ -48,27 +75,43 @@ class Figure:
     def connect_points(self, screen, s_point, e_point):
         s_r_matrix = s_point.coordinates_as_matrix()
         projection2d = np.dot(get_projection_matrix(), s_r_matrix)
-        # s_x = int(projection2d[0][0] )
-        # s_y = int(projection2d[1][0] )
         s_x = ((s_point.x * D) / (s_point.z + D)) * self.zoom
         s_y = ((s_point.y * D) / (s_point.z + D)) * self.zoom
         
         e_r_matrix = e_point.coordinates_as_matrix()
         projection2d = np.dot(get_projection_matrix(), e_r_matrix)
-        # e_x = int(projection2d[0][0] )
-        # e_y = int(projection2d[1][0] )
         e_x = ((e_point.x * D) / (e_point.z + D)) * self.zoom
         e_y = ((e_point.y * D) / (e_point.z + D)) * self.zoom
         
         pygame.draw.line(screen, LINE_COLOR, (s_x, s_y), (e_x, e_y))
+        
+    def get_projected_point(self, point):
+        p_x = ((point.x * D) / (point.z + D)) * self.zoom
+        p_y = ((point.y * D) / (point.z + D)) * self.zoom
+        
+        return (p_x, p_y)
 
-    def draw_figure(self):            
+    def draw_figure_without_walls(self):            
         for p in range(4):
             line_d = self.connect_points(self.screen, self.points_list[p], self.points_list[(p+1) % 4])
             
             line_u = self.connect_points(self.screen, self.points_list[p + 4], self.points_list[((p+1) % 4) + 4])
             
             line_s = self.connect_points(self.screen, self.points_list[p], self.points_list[p + 4])
+        
+    def draw_figure_with_walls(self):            
+        for p in range(4):
+            line_d = self.connect_points(self.screen, self.points_list[p], self.points_list[(p+1) % 4])
+            
+            line_u = self.connect_points(self.screen, self.points_list[p + 4], self.points_list[((p+1) % 4) + 4])
+            
+            line_s = self.connect_points(self.screen, self.points_list[p], self.points_list[p + 4])
+            
+        front_points = [self.get_projected_point(self.points_list[0]), 
+                        self.get_projected_point(self.points_list[1]), 
+                        self.get_projected_point(self.points_list[2]), 
+                        self.get_projected_point(self.points_list[3])]
+        pygame.draw.polygon(self.screen, (255,0,0), front_points)
             
     def applay_geometric_transformation(self, matrix):
         i = 0
