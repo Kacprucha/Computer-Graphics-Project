@@ -3,7 +3,7 @@ import numpy as np
 import sys
 import ast
 from math import *
-from my_classes import Point, Figure
+from my_classes import Point, Figure, Line, Wall, WALL_COLOR, LINE_COLOR
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -11,6 +11,8 @@ BLACK = (0,0,0)
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 
 RADIOUS = (5 * pi) / 180
+
+DRAW_WALLS = False
 
 def get_ratation_z_matrix(angle):
     rotation_z = np.matrix([
@@ -57,6 +59,9 @@ def main ():
     figure_paths = sys.argv[1:]
     
     figures = []
+    walss = []
+    lines = []
+    nr_fig = 1
     for path in figure_paths:
         points = []
         with open(path, 'r') as file:
@@ -64,15 +69,41 @@ def main ():
                 x,y,z = line.split()
                 point = Point(int(x), int(SCREEN_HEIGHT - int(y)), int(z))
                 points.append(point)
+                
+            for p in range(4):
+                line_b = Line(screen, points[p], points[(p+1) % 4], [nr_fig + ((p+1) * 0.1), nr_fig + (5 * 0.1)])
+                lines.append(line_b)
+            
+                line_f = Line (screen, points[p + 4], points[((p+1) % 4) + 4], [nr_fig + ((p+1) * 0.1), nr_fig + (6 * 0.1)])
+                lines.append(line_f)
+            
+                second_id = lambda x: nr_fig + (4 * 0.1) if x == 0 else nr_fig + (x * 0.1)
+                line_s = Line (screen, points[p], points[p + 4], [nr_fig + ((p+1) * 0.1), second_id(p)])
+                lines.append(line_s)
+                
+            for w in range(6):
+                lines_in_wall = []
+                wall_id = nr_fig + ((w+1) * 0.1)
+                
+                for line in lines:
+                    if wall_id in line.walls_id:
+                        lines_in_wall.append(line)
+                
+                wall_color = lambda x: WALL_COLOR if x == 0 else LINE_COLOR
+                
+                wall = Wall(wall_id, screen, lines_in_wall, wall_color, False)
+                walss.append(wall)
             
             figure = Figure(screen, points, 1)
             figures.append(figure)
     
+
     current_zoom = 1
     running = True
     while running:
-        for fig in figures:
-            fig.draw_figure_without_walls()
+        if not DRAW_WALLS:
+            for fig in figures:
+                fig.draw_figure_without_walls()
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
