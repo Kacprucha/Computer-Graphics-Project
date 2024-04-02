@@ -12,6 +12,7 @@ BLACK = (0,0,0)
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 
 RADIOUS = (5 * pi) / 180
+STEP = 50
 
 DRAW_WALLS = False
 
@@ -59,11 +60,12 @@ def main ():
     
     figure_paths = sys.argv[1:]
     
-    figures = []
+    # figures = []
     walss = []
-    lines = []
-    nr_fig = 1
+    # lines = []
+    nr_wall = 1
     for path in figure_paths:
+        lines = []
         points = []
         with open(path, 'r') as file:
             for line in file:
@@ -71,44 +73,52 @@ def main ():
                 point = Point(int(x), int(SCREEN_HEIGHT - int(y)), int(z))
                 points.append(point)
                 
-            for p in range(4):
-                line_b = Line(screen, points[p], points[(p+1) % 4], [nr_fig + ((p+1) * 0.1), nr_fig + (5 * 0.1)])
-                lines.append(line_b)
+            # for p in range(4):
+            #     line_b = Line(screen, points[p], points[(p+1) % 4], [nr_fig + ((p+1) * 0.1), nr_fig + (5 * 0.1)])
+            #     lines.append(line_b)
             
-                line_f = Line (screen, points[p + 4], points[((p+1) % 4) + 4], [nr_fig + ((p+1) * 0.1), nr_fig + (6 * 0.1)])
-                lines.append(line_f)
+            #     line_f = Line (screen, points[p + 4], points[((p+1) % 4) + 4], [nr_fig + ((p+1) * 0.1), nr_fig + (6 * 0.1)])
+            #     lines.append(line_f)
             
-                second_id = lambda x: nr_fig + (4 * 0.1) if x == 0 else nr_fig + (x * 0.1)
-                line_s = Line (screen, points[p], points[p + 4], [nr_fig + ((p+1) * 0.1), second_id(p)])
-                lines.append(line_s)
-                
-            for w in range(6):
-                lines_in_wall = []
-                wall_id = nr_fig + ((w+1) * 0.1)
-                
-                for line in lines:
-                    if wall_id in line.walls_id:
-                        lines_in_wall.append(line)
-                
-                wall_color = lambda x: WALL_COLOR if x == 0 else LINE_COLOR
-                
-                wall = Wall(wall_id, screen, lines_in_wall, wall_color, False)
-                walss.append(wall)
+            #     second_id = lambda x: nr_fig + (4 * 0.1) if x == 0 else nr_fig + (x * 0.1)
+            #     line_s = Line (screen, points[p], points[p + 4], [nr_fig + ((p+1) * 0.1), second_id(p)])
+            #     lines.append(line_s)
             
-            figure = Figure(screen, points, 1)
-            figures.append(figure)
+            for i in range(len(points)-1):
+                line = Line(screen, points[i], points[i+1], nr_wall)
+                lines.append(line)
+            line = Line(screen, points[len(points)-1], points[0], nr_wall)
+            lines.append(line)
+                
+            # for w in range(6):
+            #     lines_in_wall = []
+            #     wall_id = nr_fig + ((w+1) * 0.1)
+                
+            #     for line in lines:
+            #         if wall_id in line.walls_id:
+            #             lines_in_wall.append(line)
+                
+            #     wall_color = lambda x: WALL_COLOR if x == 0 else LINE_COLOR
+                
+            #     wall = Wall(wall_id, screen, lines_in_wall, wall_color, False)
+            #     walss.append(wall)
             
-        nr_fig += 1
+            # figure = Figure(screen, points, 1)
+            # figures.append(figure)
+            wall = Wall(nr_wall, screen, lines, points, WHITE, False)
+            walss.append(wall)
+            nr_wall += 1
         
     skaner = Skaner_liniowy(screen, walss, lines)
     skaner.scan()
 
     current_zoom = 1
     running = True
+    
     while running:
         if not DRAW_WALLS:
-            for fig in figures:
-                fig.draw_figure_without_walls()
+            for wall in walss:
+                wall.draw_wall_without_fill()
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -116,48 +126,48 @@ def main ():
             elif event.type == pygame.KEYDOWN:
                 screen.fill(BLACK)
                 if event.key == pygame.K_LEFT:
-                    for fig in figures:
+                    for fig in walss:
                         fig.applay_geometric_transformation(get_ratation_z_matrix(-RADIOUS))
                 if event.key == pygame.K_RIGHT:
-                    for fig in figures:
+                    for fig in walss:
                         fig.applay_geometric_transformation(get_ratation_z_matrix(RADIOUS))
                 if event.key == pygame.K_e:
-                    for fig in figures:
+                    for fig in walss:
                         fig.applay_geometric_transformation(get_ratation_y_matrix(RADIOUS))
                 if event.key == pygame.K_q:
-                    for fig in figures:
+                    for fig in walss:
                         fig.applay_geometric_transformation(get_ratation_y_matrix(-RADIOUS))
                 if event.key == pygame.K_z:
-                    for fig in figures:
+                    for fig in walss:
                         fig.applay_geometric_transformation(get_ratation_x_matrix(-RADIOUS))
                 if event.key == pygame.K_c:
-                    for fig in figures:
+                    for fig in walss:
                         fig.applay_geometric_transformation(get_ratation_x_matrix(RADIOUS))
                 if event.key == pygame.K_a:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(5, 0, 0))
+                    for fig in walss:
+                        fig.applay_geometric_transformation(get_translation_matrix(STEP, 0, 0))
                 if event.key == pygame.K_d:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(-5, 0, 0))
+                    for fig in walss:
+                        fig.applay_geometric_transformation(get_translation_matrix(-STEP, 0, 0))
                 if event.key == pygame.K_w:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 5, 0))
+                    for fig in walss:
+                        fig.applay_geometric_transformation(get_translation_matrix(0, STEP, 0))
                 if event.key == pygame.K_s:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, -5, 0))
+                    for fig in walss:
+                        fig.applay_geometric_transformation(get_translation_matrix(0, -STEP, 0))
                 if event.key == pygame.K_UP:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, -5))
+                    for fig in walss:
+                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, -STEP))
                 if event.key == pygame.K_DOWN:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, 5))
+                    for fig in walss:
+                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, STEP))
                 if event.key == pygame.K_m:
                     current_zoom = current_zoom / 2
-                    for fig in figures:
+                    for fig in walss:
                         fig.change_zoom(current_zoom)
                 if event.key == pygame.K_p:
                     current_zoom = current_zoom * 2
-                    for fig in figures:
+                    for fig in walss:
                         fig.change_zoom(current_zoom)
             
         pygame.display.flip()

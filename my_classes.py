@@ -72,14 +72,40 @@ class Line:
     
     def if_line_horizontal(self):
         return self.get_projected_y_start_point() == self.get_projected_y_end_point()
+    
+    def connect_points(self, screen):
+        s_r_matrix = self.s_point.coordinates_as_matrix()
+        projection2d = np.dot(get_projection_matrix(), s_r_matrix)
+        s_x = (((self.s_point.x * self.zoom) * D) / ((self.s_point.z * self.zoom) + D)) 
+        s_y = (((self.s_point.y * self.zoom) * D) / ((self.s_point.z * self.zoom) + D))
+        
+        e_r_matrix = self.e_point.coordinates_as_matrix()
+        projection2d = np.dot(get_projection_matrix(), e_r_matrix)
+        e_x = (((self.e_point.x * self.zoom) * D) / ((self.e_point.z * self.zoom) + D)) 
+        e_y = (((self.e_point.y * self.zoom) * D) / ((self.e_point.z * self.zoom) + D)) 
+        
+        pygame.draw.line(screen, LINE_COLOR, (s_x, s_y), (e_x, e_y))
         
 class Wall:
-    def __init__(self, id, screen, line_list, color, if_in):
+    def __init__(self, id, screen, line_list, points_list, color, if_in):
         self.id = id
         self.screen = screen
         self.line_list = line_list
+        self.point_list = points_list
         self.color = color
         self.if_in = if_in
+        
+    def draw_wall_without_fill(self):
+        for line in self.line_list:
+            line.connect_points(self.screen)
+            
+    def applay_geometric_transformation(self, matrix):
+        i = 0
+        for point in self.point_list:
+            point.matrix_operation(matrix)
+            
+    def change_zoom(self, zoom):
+        self.zoom = zoom
         
 class Figure:
     def __init__(self, screen, points_list, zoom):
