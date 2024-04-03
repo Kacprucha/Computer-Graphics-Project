@@ -1,10 +1,9 @@
 import pygame
 import numpy as np
-import sys
-import ast
+import sys, ast, random
 from math import *
 from line_scan import Skaner_liniowy
-from my_classes import Point, Figure, Line, Wall, WALL_COLOR, LINE_COLOR
+from my_classes import Point, Line, Wall, WALL_COLOR, LINE_COLOR
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -13,8 +12,6 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 
 RADIOUS = (5 * pi) / 180
 STEP = 50
-
-DRAW_WALLS = False
 
 def get_ratation_z_matrix(angle):
     rotation_z = np.matrix([
@@ -62,10 +59,10 @@ def main ():
     
     # figures = []
     walss = []
-    # lines = []
+    lines = []
     nr_wall = 1
     for path in figure_paths:
-        lines = []
+        lines_in_wall = []
         points = []
         with open(path, 'r') as file:
             for line in file:
@@ -88,6 +85,7 @@ def main ():
                 line = Line(screen, points[i], points[i+1], nr_wall)
                 lines.append(line)
             line = Line(screen, points[len(points)-1], points[0], nr_wall)
+            lines_in_wall.append(line)
             lines.append(line)
                 
             # for w in range(6):
@@ -105,20 +103,26 @@ def main ():
             
             # figure = Figure(screen, points, 1)
             # figures.append(figure)
-            wall = Wall(nr_wall, screen, lines, points, WHITE, False)
+            
+            r = random.randint(0,255)
+            g = random.randint(0,255)
+            b = random.randint(0,255)
+            
+            wall = Wall(nr_wall, screen, lines_in_wall, points, (r,g,b), False)
             walss.append(wall)
             nr_wall += 1
         
-    skaner = Skaner_liniowy(screen, walss, lines)
-    skaner.scan()
+    # skaner = Skaner_liniowy(screen, walss, lines)
+    # skaner.scan()
 
     current_zoom = 1
     running = True
     
     while running:
-        if not DRAW_WALLS:
-            for wall in walss:
-                wall.draw_wall_without_fill()
+        # for wall in walss:
+        #     wall.draw_wall_with_fill()
+        skaner = Skaner_liniowy(screen, walss, lines)
+        skaner.scan()
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
