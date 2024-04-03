@@ -49,24 +49,28 @@ class Skaner_liniowy:
                         horizontal_lines.append(line)
                         active_lines.append(line)
                         
+            for line in active_lines:
+                if line.if_line_horizontal():
+                    active_lines.remove(line)
+                        
             sorted_active_lines = []
             get_lowest_x = lambda x: x.s_point.x if x.s_point.x <= x.e_point.x else x.e_point.x
             while len(active_lines) > 0:
                 lowest_x_line = active_lines[0]
                 for line in active_lines:
-                    l_x = get_lowest_x(line)
-                    l_l_x = get_lowest_x(lowest_x_line)
-                    if lowest_x_line.s_point.x > line.s_point.x:
+                    # l_x = get_lowest_x(line)
+                    # l_l_x = get_lowest_x(lowest_x_line)
+                    # if lowest_x_line.s_point.x > line.s_point.x:
+                    #     lowest_x_line = line
+                    # elif lowest_x_line.e_point.x > line.e_point.x:
+                    #     if l_x < l_l_x:
+                    #         lowest_x_line = line
+                    p_x_line = line.find_x_for_y(600 - y)
+                    p_x_lowest = lowest_x_line.find_x_for_y(600 - y)
+                    if p_x_line is not None and p_x_lowest is not None and p_x_line < p_x_lowest:
                         lowest_x_line = line
-                    elif lowest_x_line.e_point.x > line.e_point.x:
-                        if l_x < l_l_x:
-                            lowest_x_line = line
                 sorted_active_lines.append(lowest_x_line)
                 active_lines.remove(lowest_x_line)
-            
-            for line in sorted_active_lines:
-                if line.if_line_horizontal():
-                    sorted_active_lines.remove(line)
             
             previous_line = None
             for line in sorted_active_lines:
@@ -84,7 +88,7 @@ class Skaner_liniowy:
                             a_wall = self.find_wall_of_id(a_id[0])
                             color = a_wall.color
                             p_x = previous_line.find_x_for_y(y_to_draw)
-                            if p_x is not None and l_x is not None and p_x < l_x:
+                            if p_x is not None and l_x is not None: #and p_x < l_x:
                                 # if y in range(120,141):
                                 #     print("\t\tp_x:", p_x, "l_x:", l_x)
                                 #     print("\t\tp:", previous_line.wall_id, "|", previous_line.s_point.x, previous_line.e_point.x)
@@ -105,7 +109,7 @@ class Skaner_liniowy:
                                 c_wall = self.find_wall_of_id(closer_wall_id)
                                 if c_wall is not None:
                                     color = c_wall.color
-                                    if p_x is not None and l_x is not None and p_x < l_x:
+                                    if p_x is not None and l_x is not None:  #and p_x < l_x:
                                         # if y in range(120,141):
                                         #     print("\t\tp_x:", p_x, "l_x:", l_x)
                                         #     print("\t\tp:", previous_line.wall_id, "|", previous_line.s_point.x, previous_line.e_point.x)
@@ -123,6 +127,6 @@ class Skaner_liniowy:
             #     print("\t|", wall.id, wall.if_in)
             # # print("y:", y)
             # for line in sorted_active_lines:
-            #     print("\t", line.wall_id, "|", line.s_point.y_for_alg(), "|", line.s_point.x, line.e_point.x)
+            #     print("\t", line.wall_id, "|", line.find_x_for_y(600 - y), "|", line.s_point.x, line.e_point.x)
         
         

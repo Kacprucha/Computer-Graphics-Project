@@ -10,7 +10,7 @@ BLACK = (0,0,0)
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 
-RADIOUS = (5 * pi) / 180
+RADIOUS = (15 * pi) / 180
 STEP = 50
 
 def get_ratation_z_matrix(angle):
@@ -112,8 +112,8 @@ def main ():
             walss.append(wall)
             nr_wall += 1
         
-    # skaner = Skaner_liniowy(screen, walss, lines)
-    # skaner.scan()
+    #skaner = Skaner_liniowy(screen, walss, lines)
+    #skaner.scan()
 
     current_zoom = 1
     running = True
