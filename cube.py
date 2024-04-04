@@ -13,7 +13,7 @@ class Cube:
         
     def create_lines(self):
         for i in range(4):
-            self.lines.append(Line(self.screen, self.points[i], self.points[(i+1) % 4]))
+            self.lines.append(Line(self.screen, self.points[i], self.points[(i+1) % 4], (200,80,40)))
             self.lines.append(Line(self.screen, self.points[i + 4], self.points[((i+1) % 4) + 4]))
             self.lines.append(Line(self.screen, self.points[i], self.points[i + 4]))
             
@@ -33,5 +33,5 @@ class Cube:
         with open(path, 'r') as file:
             for line in file:
                 x, y, z = line.split()
-                point = Point(int(x), int(int(y)), int(z))
+                point = Point(int(x), int(600-int(y)), int(z))
                 self.points.append(point)
