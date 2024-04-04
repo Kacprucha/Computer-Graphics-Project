@@ -58,7 +58,7 @@ class Figure:
         e_x = (((e_point.x * self.zoom) * D) / ((e_point.z * self.zoom) + D)) 
         e_y = (((e_point.y * self.zoom) * D) / ((e_point.z * self.zoom) + D)) 
         
-        pygame.draw.line(screen, LINE_COLOR, (s_x + HALF_WIDTH, s_y - HALF_HIGH), (e_x+ HALF_WIDTH, e_y - HALF_HIGH))
+        pygame.draw.line(screen, LINE_COLOR, (s_x + HALF_WIDTH, s_y - HALF_HIGH), (e_x+ HALF_WIDTH, e_y - HALF_HIGH),2)
         
     def get_projected_point(self, point):
         p_x = ((point.x * D) / (point.z + D)) * self.zoom

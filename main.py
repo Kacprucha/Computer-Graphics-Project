@@ -81,46 +81,58 @@ def main ():
                 screen.fill(BLACK)
                 if event.key == pygame.K_LEFT:
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
                         fig.applay_geometric_transformation(get_ratation_z_matrix(-RADIOUS))
+                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
                 if event.key == pygame.K_RIGHT:
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
                         fig.applay_geometric_transformation(get_ratation_z_matrix(RADIOUS))
+                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
                 if event.key == pygame.K_e:
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
                         fig.applay_geometric_transformation(get_ratation_y_matrix(RADIOUS))
+                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
                 if event.key == pygame.K_q:
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
                         fig.applay_geometric_transformation(get_ratation_y_matrix(-RADIOUS))
+                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
                 if event.key == pygame.K_z:
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
                         fig.applay_geometric_transformation(get_ratation_x_matrix(-RADIOUS))
+                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
                 if event.key == pygame.K_c:
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
                         fig.applay_geometric_transformation(get_ratation_x_matrix(RADIOUS))
+                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
                 if event.key == pygame.K_a:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(5, 0, 0))
+                        fig.applay_geometric_transformation(get_translation_matrix(20, 0, 0))
                 if event.key == pygame.K_d:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(-5, 0, 0))
+                        fig.applay_geometric_transformation(get_translation_matrix(-20, 0, 0))
                 if event.key == pygame.K_w:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 5, 0))
+                        fig.applay_geometric_transformation(get_translation_matrix(0, 20, 0))
                 if event.key == pygame.K_s:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, -5, 0))
+                        fig.applay_geometric_transformation(get_translation_matrix(0, -20, 0))
                 if event.key == pygame.K_UP:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, -5))
+                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, -20))
                 if event.key == pygame.K_DOWN:
                     for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, 5))
+                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, 20))
                 if event.key == pygame.K_m:
-                    current_zoom = current_zoom / 2
+                    current_zoom = current_zoom * 0.75
                     for fig in figures:
                         fig.change_zoom(current_zoom)
                 if event.key == pygame.K_p:
-                    current_zoom = current_zoom * 2
+                    current_zoom = current_zoom * 1.25
                     for fig in figures:
                         fig.change_zoom(current_zoom)
             
