@@ -130,10 +130,16 @@ def main ():
                 if event.key == pygame.K_m:
                     current_zoom = current_zoom * 0.75
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-600,0))
+                        fig.applay_zoom(current_zoom)
+                        fig.applay_geometric_transformation(get_translation_matrix(0,600,0))
                         fig.change_zoom(current_zoom)
                 if event.key == pygame.K_p:
                     current_zoom = current_zoom * 1.25
                     for fig in figures:
+                        fig.applay_geometric_transformation(get_translation_matrix(0,-600,0))
+                        fig.applay_zoom(current_zoom)
+                        fig.applay_geometric_transformation(get_translation_matrix(0,600,0))
                         fig.change_zoom(current_zoom)
             
         pygame.display.flip()

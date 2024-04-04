@@ -50,13 +50,17 @@ class Figure:
     def connect_points(self, screen, s_point, e_point):
         s_r_matrix = s_point.coordinates_as_matrix()
         projection2d = np.dot(get_projection_matrix(), s_r_matrix)
-        s_x = (((s_point.x * self.zoom) * D) / ((s_point.z * self.zoom) + D)) 
-        s_y = (((s_point.y * self.zoom) * D) / ((s_point.z * self.zoom) + D))
+        # s_x = (((s_point.x * self.zoom) * D) / ((s_point.z * self.zoom) + D)) 
+        # s_y = (((s_point.y * self.zoom) * D) / ((s_point.z * self.zoom) + D))
+        s_x = (((s_point.x ) * D) / ((s_point.z ) + D)) 
+        s_y = (((s_point.y ) * D) / ((s_point.z ) + D))
         
         e_r_matrix = e_point.coordinates_as_matrix()
         projection2d = np.dot(get_projection_matrix(), e_r_matrix)
-        e_x = (((e_point.x * self.zoom) * D) / ((e_point.z * self.zoom) + D)) 
-        e_y = (((e_point.y * self.zoom) * D) / ((e_point.z * self.zoom) + D)) 
+        # e_x = (((e_point.x * self.zoom) * D) / ((e_point.z * self.zoom) + D)) 
+        # e_y = (((e_point.y * self.zoom) * D) / ((e_point.z * self.zoom) + D))
+        e_x = (((e_point.x ) * D) / ((e_point.z ) + D)) 
+        e_y = (((e_point.y ) * D) / ((e_point.z ) + D)) 
         
         pygame.draw.line(screen, LINE_COLOR, (s_x + HALF_WIDTH, s_y - HALF_HIGH), (e_x+ HALF_WIDTH, e_y - HALF_HIGH),2)
         
@@ -79,6 +83,16 @@ class Figure:
         i = 0
         for point in self.points_list:
             point.matrix_operation(matrix)
+            
+    def applay_zoom(self, n_zoom):
+        for point in self.points_list:
+            point.x = point.x / self.zoom
+            point.y = point.y / self.zoom
+            point.z = point.z / self.zoom
+            
+            point.x = point.x * n_zoom
+            point.y = point.y * n_zoom
+            point.z = point.z * n_zoom
             
     def change_zoom(self, zoom):
         self.zoom = zoom
