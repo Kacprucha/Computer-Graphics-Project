@@ -1,11 +1,15 @@
 import pygame
 import numpy as np
-import sys
-import ast
+import sys, ast
 from math import *
-from my_classes import Point, Figure
+from my_classes import Light
+from phong_shading import Phong_shading
 
 WHITE = (255,255,255)
+METALIC = (187,187,187)
+BRICK = (188, 74, 60)
+PLASTIC = (0,0,255)
+WOOD = (139,69,19)
 BLACK = (0,0,0)
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
@@ -48,99 +52,77 @@ def get_translation_matrix(t_x, t_y, t_z):
     ])
     return rotation_x
 
+def get_z_for_sphere(x, y, r):
+    return sqrt(r**2 - x**2 - y**2)
+
 def main ():
 
     pygame.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
-    figure_paths = sys.argv[1:]
+    points_list = []
     
-    figures = []
-    for path in figure_paths:
-        points = []
-        with open(path, 'r') as file:
-            for line in file:
-                x,y,z = line.split()
-                point = Point(int(x), int(SCREEN_HEIGHT - int(y)), int(z))
-                points.append(point)
+    for x in range(-100, 100+1):
+        y_values = sqrt(100**2 - x**2)
+        for y in range(int(-y_values), int(y_values+1)):
+            z = get_z_for_sphere(x, y, 100)
+            points_list.append([x, y, -z])
             
-            figure = Figure(screen, points, 1)
-            figures.append(figure)
+    light = Light([-120, 120, -120])
+    camera = [0, 0, -200]
     
-    current_zoom = 1
+    #phong = Phong_shading(screen, 0.3, 0.8, 0.2, 20, 0.6, 1, camera, light, WOOD)
+    phong = Phong_shading(screen, 0.1, 0.4, 0.9, 150, 0.6, 1, camera, light, METALIC)
+    #phong = Phong_shading(screen, 0.3, 0.8, 0.1, 10, 0.6, 1, camera, light, BRICK)
+    #phong = Phong_shading(screen, 0.2, 0.8, 0.6, 50, 0.6, 1, camera, light, PLASTIC)
+    
     running = True
     while running:
-        for fig in figures:
-            fig.draw_figure_without_walls()
-    
+        phong.applay_phong_shading(points_list)
+        pygame.draw.circle(screen, (255,255,0), (SCREEN_WIDTH//2 + light.position[0], SCREEN_HEIGHT//2 - light.position[1]), 5)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
                 screen.fill(BLACK)
-                if event.key == pygame.K_LEFT:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
-                        fig.applay_geometric_transformation(get_ratation_z_matrix(-RADIOUS))
-                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
-                if event.key == pygame.K_RIGHT:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
-                        fig.applay_geometric_transformation(get_ratation_z_matrix(RADIOUS))
-                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
-                if event.key == pygame.K_e:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
-                        fig.applay_geometric_transformation(get_ratation_y_matrix(RADIOUS))
-                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
-                if event.key == pygame.K_q:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
-                        fig.applay_geometric_transformation(get_ratation_y_matrix(-RADIOUS))
-                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
-                if event.key == pygame.K_z:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
-                        fig.applay_geometric_transformation(get_ratation_x_matrix(-RADIOUS))
-                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
-                if event.key == pygame.K_c:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-900,0))
-                        fig.applay_geometric_transformation(get_ratation_x_matrix(RADIOUS))
-                        fig.applay_geometric_transformation(get_translation_matrix(0,900,0))
                 if event.key == pygame.K_a:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(20, 0, 0))
+                    light.position[0] -= 20
                 if event.key == pygame.K_d:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(-20, 0, 0))
+                    light.position[0] += 20
                 if event.key == pygame.K_w:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 20, 0))
+                    light.position[1] += 20
                 if event.key == pygame.K_s:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, -20, 0))
+                    light.position[1] -= 20
                 if event.key == pygame.K_UP:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, -20))
+                    light.position[2] += 20
                 if event.key == pygame.K_DOWN:
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0, 0, 20))
-                if event.key == pygame.K_m:
-                    current_zoom = current_zoom * 0.75
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-600,0))
-                        fig.applay_zoom(current_zoom)
-                        fig.applay_geometric_transformation(get_translation_matrix(0,600,0))
-                        fig.change_zoom(current_zoom)
-                if event.key == pygame.K_p:
-                    current_zoom = current_zoom * 1.25
-                    for fig in figures:
-                        fig.applay_geometric_transformation(get_translation_matrix(0,-600,0))
-                        fig.applay_zoom(current_zoom)
-                        fig.applay_geometric_transformation(get_translation_matrix(0,600,0))
-                        fig.change_zoom(current_zoom)
+                    light.position[2] -= 20
+                if event.key == pygame.K_1:
+                    phong.ka = 0.1
+                    phong.kd = 0.4
+                    phong.ks = 0.9
+                    phong.n = 150
+                    phong.color = METALIC
+                if event.key == pygame.K_2:
+                    phong.ka = 0.2
+                    phong.kd = 0.8
+                    phong.ks = 0.6
+                    phong.n = 50
+                    phong.color = PLASTIC
+                if event.key == pygame.K_3:
+                    phong.ka = 0.3
+                    phong.kd = 0.8
+                    phong.ks = 0.2
+                    phong.n = 20
+                    phong.color = WOOD
+                if event.key == pygame.K_4:
+                    phong.ka = 0.3
+                    phong.kd = 0.8
+                    phong.ks = 0.1
+                    phong.n = 10
+                    phong.color = BRICK
             
         pygame.display.flip()
     
