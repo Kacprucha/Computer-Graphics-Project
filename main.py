@@ -76,10 +76,14 @@ def main ():
     phong = Phong_shading(screen, 0.1, 0.4, 0.9, 150, 0.6, 1, camera, light, METALIC)
     #phong = Phong_shading(screen, 0.3, 0.8, 0.1, 10, 0.6, 1, camera, light, BRICK)
     #phong = Phong_shading(screen, 0.2, 0.8, 0.6, 50, 0.6, 1, camera, light, PLASTIC)
+    phong.applay_phong_shading(points_list, True)
     
     running = True
+    rearander = False
     while running:
-        phong.applay_phong_shading(points_list)
+        phong.applay_phong_shading(points_list, rearander)
+        if rearander:
+            rearander = False
         pygame.draw.circle(screen, (255,255,0), (SCREEN_WIDTH//2 + light.position[0], SCREEN_HEIGHT//2 - light.position[1]), 5)
         
         for event in pygame.event.get():
@@ -123,6 +127,9 @@ def main ():
                     phong.ks = 0.1
                     phong.n = 10
                     phong.color = BRICK
+                    
+                if event.key == pygame.K_a or event.key == pygame.K_d or event.key == pygame.K_w or event.key == pygame.K_s or event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4:
+                    rearander = True
             
         pygame.display.flip()
     

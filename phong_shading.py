@@ -17,6 +17,7 @@ class Phong_shading():
         self.V = V
         self.light = light
         self.color = color
+        self.cashet_color = []
         
     def normalize(self, vector):
         norm = np.linalg.norm(vector)
@@ -44,10 +45,17 @@ class Phong_shading():
         I = self.Ia * self.ka + self.Ip * (self.kd * diffuseStrength + self.ks * specularStrength**self.n)
         return I
     
-    def applay_phong_shading(self, points_list):
+    def applay_phong_shading(self, points_list, rereander):
+        if (rereander):
+            self.cashet_color.clear()
+        
+        index = 0
         for point in points_list:
-            I = self.phong_for_point(point)
-            c = (min(255,self.color[0] * I), min(255,self.color[1] * I), min(255,self.color[2] * I))
-            if I < 0:
-                print(I)
-            pygame.draw.circle(self.screen, c, (SCREEN_WIDTH//2 + point[0], SCREEN_HEIGHT//2 - point[1]), 1)
+            if (rereander):
+                I = self.phong_for_point(point)
+                c = (min(255,self.color[0] * I), min(255,self.color[1] * I), min(255,self.color[2] * I))
+                self.cashet_color.append(c)
+            #I = self.phong_for_point(point)
+            #c = (min(255,self.color[0] * I), min(255,self.color[1] * I), min(255,self.color[2] * I))
+            pygame.draw.circle(self.screen, self.cashet_color[index], (SCREEN_WIDTH//2 + point[0], SCREEN_HEIGHT//2 - point[1]), 1)
+            index += 1
