@@ -1,6 +1,0 @@
-            if not (self.points_list[p].z < 0 or self.points_list[(p+1) % 4].z < 0):
-                line_d = self.connect_points(self.screen, self.points_list[p], self.points_list[(p+1) % 4])
-            if not (self.points_list[p + 4].z < 0 or self.points_list[((p+1) % 4) + 4].z < 0):
-                line_u = self.connect_points(self.screen, self.points_list[p + 4], self.points_list[((p+1) % 4) + 4])
-            if not (self.points_list[p].z < 0 or self.points_list[p + 4].z < 0):
-                line_s = self.connect_points(self.screen, self.points_list[p], self.points_list[p + 4])

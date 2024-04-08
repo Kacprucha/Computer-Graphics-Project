@@ -25,6 +25,9 @@ class Point:
         self.y = self.y*value
         self.z = self.z*value
         
+    def y_for_alg(self):
+        return 600 - self.y
+        
     # def translation_matrix(self, tx, ty, tz):
     #     m = np.matrix([
     #         [1,0,0,tx],
