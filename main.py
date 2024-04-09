@@ -34,8 +34,18 @@ def main():
     scaner = LineScaner(screen, walls, lines)
     dispaly = True
     while dispaly:
-        scaner.scan()
-        screen.fill(GRAY)
+        # scaner.scan()
+        # screen.fill(GRAY)
+        # scaner.scan()
+        # walls = scaner.scan_tk1()
+        scaner.scren_scann()
+        # for wall in walls:
+        #     wall.draw_wall_with_fill()
+        # colors_matrix = np.full((800, 600, 3), (255, 255, 255), dtype=np.uint8)
+        # pg.surfarray.blit_array(screen, colors_matrix)
+        walls[0].print_polygon_structure()
+        if walls[0].point_inside_polygon(400, 300):
+            pg.draw.circle(screen, COLOR, (400, 300), 50, 3)
         
         pg.draw.line(screen, COLOR, (S_WIDTH/2-25, S_HEIGHT/2), (S_WIDTH/2+25, S_HEIGHT/2), 2)
         pg.draw.line(screen, COLOR, (S_WIDTH/2, S_HEIGHT/2-25), (S_WIDTH/2, S_HEIGHT/2+25), 2)

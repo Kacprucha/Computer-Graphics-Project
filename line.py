@@ -8,8 +8,12 @@ class Line:
     
     def __init__(self, screen, start, end, wall_id, color = BLACK):
         self.screen = screen
-        self.start = start
-        self.end = end
+        if start.y < end.y :
+            self.start = start
+            self.end = end
+        else:
+            self.start = end
+            self.end = start
         self.color = color
         self.wall_id = wall_id
         

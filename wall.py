@@ -77,8 +77,8 @@ class Wall:
     
     def draw_wall_with_fill(self):
         points_to_fill = []
-        for point in self.point_list:
-            points_to_fill.append((point.x, point.y))
+        for point in self.points:
+            points_to_fill.append(point.cordinate_to_print())
             
         pg.draw.polygon(self.screen, self.color, points_to_fill)
             
@@ -89,6 +89,25 @@ class Wall:
     def zoom_transformation(self, value):
         for point in self.points:
             point.zoom_transformation(value)
+            
+    def print_polygon_structure(self):
+        self.points_to_print = []
+        self.line_to_print = []
+        
+        for point in self.points:
+            self.points_to_print.append(point.cordinate_to_print())
+        for i in range(len(self.points_to_print)-1):
+            self.line_to_print.append((self.points_to_print[i], self.points_to_print[i+1]))
+        self.line_to_print.append((self.points_to_print[0], self.points_to_print[len(self.points_to_print)-1]))
+        
+    def point_inside_polygon(self, x, y):
+        crossings = 0
+        for line in self.line_to_print:
+            if (line[0][1] > y and line[1][1] <= y) or (line[0][1] <= y and line[1][1] > y):
+                if line[0][0] + (y - line[0][1]) / (line[1][1] - line[0][1]) * (line[1][0] - line[0][0]) <= x:
+                    crossings += 1
+        return crossings % 2 == 1
+        
             
             
             
