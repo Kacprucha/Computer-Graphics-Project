@@ -42,27 +42,6 @@ class Line:
             pg.draw.circle(self.screen, self.BLACK,(end_x, end_y), 2, 2)
             pg.draw.line(self.screen, self.color, (start_x, start_y), (end_x, end_y))
             
-    def if_line_horizontal(self):
-        return self.start.y == self.end.y
-    
-    def find_x_for_y(self, y):
-        if self.start.y == self.end.y:
-            return self.start.x
-        
-        if self.start.x - self.end.x != 0:
-            a = (self.start.y - self.end.y) / (self.start.x - self.end.x)
-            b = self.start.y - a * self.start.x
-            return (y - b) / a
-        
-    def check_if_in_line(self, x):
-        if self.start.x > self.end.x:
-            if self.start.x >= x and self.end.x <= x:
-                return True
-        else:
-            if self.start.x <= x and self.end.x >= x:
-                return True
-            
-        return False
     
     
         

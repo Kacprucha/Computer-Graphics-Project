@@ -47,18 +47,14 @@ class Point:
         return 600 - self.y
         
     def print_to_coordinate(self, start_x, start_y):
-        # Inicjalizacja zmiennych
         epsilon = 1e-6
         max_iterations = 1000
-        z = 1.0  # Początkowe przybliżenie dla z
-        # Iteracyjne rozwiązanie równań
+        z = 1.0
         for _ in range(max_iterations):
             prev_z = z
-            # Równania z twojej funkcji przekształcone do postaci równania rozwiązującego odwrotność
             x = (start_x - s_width/2) * (z + self.D) / self.D
             y = (start_y + s_height/2) * (z + self.D) / self.D
             z = ((x**2 + y**2) / (2 * self.D)) - self.D
-            # Sprawdzenie warunku stopu
             if abs(z - prev_z) < epsilon:
                 break
         else:

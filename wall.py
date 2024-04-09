@@ -41,39 +41,7 @@ class Wall:
             
         self.points = points
         self. lines = lines
-        
-    def plane_equation_3points(self, p1, p2, p3):
-        v1 = p2 - p1
-        v2 = p3 - p1
-        cp = np.cross(v1, v2)
-        A, B, C = cp
-        D = -np.dot(cp, p1)
-        
-        return A, B, C, D
-    
-    def plane_equation_n_points(self, points): # points is a Nx3 matrix
-        centroid = np.mean(points, axis=0)
-        normalized_points = points - centroid
-        U, S, Vt = np.linalg.svd(normalized_points)
-        normal_vector = Vt[2, :]
-        A, B, C = normal_vector
-        D = -np.dot(normal_vector, centroid)
-        
-        return A, B, C, D
-    
-    def find_z_of_plane(self, x, y):
-        if len(self.points) == 3:
-            point1 = np.array([self.points[0].x, self.points[0].y, self.points[0].z])
-            point2 = np.array([self.points[1].x, self.points[1].y, self.points[1].z])
-            point3 = np.array([self.points[2].x, self.points[2].y, self.points[2].z])
-            A, B, C, D = self.plane_equation_3points(point1, point2, point3)
-        else:
-            points = np.zeros((len(self.point_list), 3))
-            for i in range(len(self.point_list)):
-                points[i] = [self.point_list[i].x, self.point_list[i].y, self.point_list[i].z]
-            A, B, C, D = self.plane_equation_n_points(points)
-            
-        return (-A * x - B * y - D) / C
+
     
     def draw_wall_with_fill(self):
         points_to_fill = []
