@@ -8,7 +8,7 @@ To see other part of a project you have to select correct brunch.
 - Pygame
 - NumPy
 
-# Usage
+## Usage
 Run the program by executing main.py. <br>
 Pass the paths to text files containing point coordinates as command-line arguments. Each text file should contain one point per line in the format: x y z. <br>
 Example: <br>
@@ -23,7 +23,7 @@ Example: <br>
 -125 -25 100
 ```
 Use the following controls to interact with the visualization: <br>
-## Movment of camera
+### Movment of camera
 | Key | Direction |
 | ------------- | ------------- |
 | W  | Up  |
@@ -33,7 +33,7 @@ Use the following controls to interact with the visualization: <br>
 | Arrow Up | Forward |
 | Arrow Down | Backward |
 
-## Rotations
+### Rotations
 | Key | Direction |
 | ------------- | ------------- |
 | Q  | Left rotation on OX  |
@@ -43,7 +43,7 @@ Use the following controls to interact with the visualization: <br>
 | Arrow Left | Left rotation on OZ |
 | Arrow Right | Right rotation on OZ |
 
-## Zoom
+### Zoom
 | Key | Direction |
 | ------------- | ------------- |
 | P  | Zoom in  |
